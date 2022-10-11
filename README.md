@@ -45,6 +45,43 @@ CI/CD bridges the gaps between development and operation activities and teams by
 
     ![serverlessArchitecture](/images/serverlessArchitecture.png)
 
+9. Navigate to [AWS IAM](https://us-east-1.console.aws.amazon.com/iamv2/home?region=us-east-1#/home) and select Role on the left panel to display a list of roles
+Look for CloudFormation role for project **serverless-start**
+
+    ![iamrole](/images/iamrole-serverless.png)
+
+Click on the Role **CloudFormationRole-serverless-start-...**. Choose **Add Permissions** -> **Create Inline Policy** and select **JSON** tab when it is opened.
+
+    ![iamrole-inline-policy](/images/iamrole-inline-policy.png)
+
+Paste in the following JSON object into the input field.
+
+    ```
+    {
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Sid": "VisualEditor0",
+            "Effect": "Allow",
+            "Action": [
+                    "iam:GetRole",
+                    "iam:PassRole",
+                    "iam:DetachRolePolicy",
+                    "iam:DeleteRolePolicy",
+                    "iam:CreateRole",
+                    "iam:DeleteRole",
+                    "iam:AttachRolePolicy",
+                    "iam:PutRolePolicy",
+                    "iam:GetRolePolicy"
+            ],
+            "Resource": "*"
+        }
+    ]
+    }
+    ```
+
+Name **Policy** as **CloudFormation-serverless-start-create-role** and choose **Create Policy** 
+
 ### Step 2. Setting up the Code Repo and IDE
 1. Navigate to the github repository that is created in your github account. The repository is a SAM application. Please refer to the [SAM documentation](https://docs.aws.amazon.com/serverless-application-model/) for more information.
     Some key files to note here are:
@@ -89,7 +126,8 @@ CI/CD bridges the gaps between development and operation activities and teams by
     
     ![createCloudEnv](/images/createCloudEnv.png)
 
-7. Checkout the github repository for the ``serverless-start`` application. **Note:** GitHub now uses a personal access token to access repositories as username and password usage has been discontinued. Please see [link](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token) to create a personal access token.
+7. Clone the github repository for the ``serverless-start`` application. 
+**Note:** GitHub now uses a personal access token to access repositories as username and password usage has been discontinued. Please see [link](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token) to create a personal access token.
     
     ![cloneserverless-start-repo](/images/cloneserverless-start-repo.png)
 
@@ -116,6 +154,7 @@ with
     };
 ```
 This results in code looking as below:
+
 ![cloud9updateCode](/images/cloud9updateCode.png)
 
 ### Step 3. Safe Deployments
@@ -144,7 +183,9 @@ This results in code looking as below:
 
     You can read more about 'safe deployments' [here](https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/automating-updates-to-serverless-apps.html).
 
-    In our lab we will be using ``Canary10Percent5Minutes`` deployment preference. This instructs AWS CodeDeploy to start with 10% traffic on new version and after that shift the remaining traffic. Changes to the ``template.yaml`` will look as below:
+    In our lab we will be using ``Canary10Percent5Minutes`` deployment preference.
+    This instructs AWS CodeDeploy to start with 10% traffic on new version and after that shift the remaining traffic. 
+    Changes to the ``template.yaml`` will look as below:
     ![definingcanary](/images/definingcanary.png)
 
 2. Once the code changes are made, these can pushed to the GitHub repository via Terminal window of Cloud9 IDE.
@@ -159,15 +200,28 @@ This results in code looking as below:
     - Code Checkout
     - Code Build
     - Code Deploy
+    Navigate to [AWS Lambda Applications](https://us-east-1.console.aws.amazon.com/lambda/home?region=us-east-1#/applications), select **serverless-start** and choose **View in CodePipeline** to see the progress
+
+    ![codepipeline](/images/serverless-codepipeline.png)
+
+
     ![codepipelinekickoff](/images/codepipelinekickoff.png)
+
+
 4. While the deployment progresses, you can navigate to the ``serverless-start`` cloudformation stack update.
+    
     ![serverlessstartdeploycfn](/images/serverlessstartdeploycfn.png)
+
 5. You can then navigate to the Code Deploy job to view the Canary deployment as specified by the deployment preference ``Canary10Percent5Minutes``.
+    
     ![canarydeployment](/images/canarydeployment.png)
+    
     After the traffic shift is completed, this is reflected in the Code deploy job.
+    
     ![trafficshiftcomplete](/images/trafficshiftcomplete.png)
 
 6. Now that the changes have been deployed, fetching an item with an ID that does not exist in the dynamodb should return a more verbose error as below:
+    
     ![idnotfounderror](/images/idnotfounderror.png)
 
 ## Cleanup
