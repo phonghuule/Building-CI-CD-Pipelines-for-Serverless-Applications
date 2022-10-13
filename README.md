@@ -58,7 +58,7 @@ Click on the Role **CloudFormationRole-serverless-start-...**. Choose **Add Perm
 
 Paste in the following JSON object into the input field.
 
-    ```
+```
     {
     "Version": "2012-10-17",
     "Statement": [
@@ -80,7 +80,7 @@ Paste in the following JSON object into the input field.
         }
     ]
     }
-    ```
+```
 
 Name **Policy** as **CloudFormation-serverless-start-create-role** and choose **Create Policy** 
 
@@ -94,7 +94,7 @@ Name **Policy** as **CloudFormation-serverless-start-create-role** and choose **
     |src/handlers| This folder specifies the code for the lamda handlers|
     |event| The folder specifies the API endpoints that will be created by the SAM|
 
-2. Navigate to the serverless [application](https://ap-southeast-2.console.aws.amazon.com/lambda/home?region=ap-southeast-2#/applications) created and access the ``serverless-start`` application. Copy the API Endpoint for the serverless application.
+2. Navigate to the serverless [application](https://us-east-1.console.aws.amazon.com/lambda/home?region=us-east-1#/applications) created and access the ``serverless-start`` application. Copy the API Endpoint for the serverless application.
 
 3. Now we will navigate to [API Gateway](https://us-east-1.console.aws.amazon.com/apigateway/main/apis?region=us-east-1), select **serverless-start API** and choose **Test** to create a few records using the API Endpoint:
 
@@ -128,7 +128,7 @@ Name **Policy** as **CloudFormation-serverless-start-create-role** and choose **
     
     ![createCloudEnv](/images/createCloudEnv.png)
 
-7. Clone the github repository for the ``serverless-start`` application. 
+7. Clone your private github repository for the ``serverless-start`` application. 
 **Note:** GitHub now uses a personal access token to access repositories as username and password usage has been discontinued. Please see [link](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token) to create a personal access token.
     
     ![cloneserverless-start-repo](/images/cloneserverless-start-repo.png)
@@ -214,15 +214,7 @@ This results in code looking as below:
     
     ![serverlessstartdeploycfn](/images/serverlessstartdeploycfn.png)
 
-5. You can then navigate to the Code Deploy job to view the Canary deployment as specified by the deployment preference ``Canary10Percent5Minutes``.
-    
-    ![canarydeployment](/images/canarydeployment.png)
-    
-    After the traffic shift is completed, this is reflected in the Code deploy job.
-    
-    ![trafficshiftcomplete](/images/trafficshiftcomplete.png)
-
-6. Now that the changes have been deployed, fetching an item with an ID that does not exist in the dynamodb should return a more verbose error as below:
+5. Now that the changes have been deployed, fetching an item with an ID that does not exist in the dynamodb should return a more verbose error as below:
     
     ![idnotfounderror](/images/idnotfounderror.png)
 
